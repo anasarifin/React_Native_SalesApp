@@ -9,9 +9,53 @@ import {
   TouchableOpacity,
   View,
   Button,
+  AsyncStorage,
 } from 'react-native';
+import Axios from 'axios';
+
+const url = 'http://100.24.32.116:9999/api/v1/login';
 
 export default class Login extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      username: '',
+      password: '',
+      warning: false,
+    };
+    this.setUsername = this.setUsername.bind(this);
+    this.setPassword = this.setPassword.bind(this);
+    this.login = this.login.bind(this);
+  }
+
+  login() {
+    // console.log(this.state.username);
+    // console.log(this.state.password);
+    Axios.post(url, {
+      username: this.state.username,
+      password: this.state.password,
+    }).then(resolve => {
+      if (resolve.data.token) {
+        AsyncStorage.setItem('token', resolve.data.token);
+        this.props.navigation.navigate('main');
+      } else {
+        this.setState({warning: resolve.data.warning});
+      }
+    });
+  }
+
+  setUsername(value) {
+    this.setState({
+      username: value,
+    });
+  }
+
+  setPassword(value) {
+    this.setState({
+      password: value,
+    });
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -24,25 +68,34 @@ export default class Login extends React.Component {
           <Text>Sushi-Bar Cashier App</Text>
         </View>
         <View style={styles.textCon}>
+          <TextInput style={styles.warning}>{this.state.warning}</TextInput>
           <TextInput
             style={styles.inputText}
             placeholder="Username"
             placeholderTextColor="rgba(0,0,0,.5)"
+            onChange={e => this.setState({username: e.nativeEvent.text})}
           />
           <TextInput
             style={styles.inputText}
             placeholder="Password"
             secureTextEntry={true}
             placeholderTextColor="rgba(0,0,0,.5)"
+            onChange={e => this.setState({password: e.nativeEvent.text})}
           />
           <TouchableOpacity>
-            <Text style={styles.loginButton}>Login</Text>
+            <Text style={styles.loginButton} onPress={this.login}>
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>Don't have an account?</Text>
           <TouchableOpacity>
-            <Text style={styles.registerButton}>Register</Text>
+            <Text
+              style={styles.registerButton}
+              onPress={() => this.props.navigation.navigate('register')}>
+              Register
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -53,7 +106,7 @@ export default class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'salmon',
+    backgroundColor: '#03a9f4',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -84,7 +137,7 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     borderRadius: 20,
-    backgroundColor: 'rgba(30,90,255,.5)',
+    backgroundColor: '#ff5722',
     width: 350,
     marginVertical: 10,
     paddingHorizontal: 20,
@@ -100,6 +153,11 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 20,
+  },
+  warning: {
+    marginTop: -40,
+    fontSize: 18,
+    color: 'red',
   },
   registerButton: {
     marginLeft: 5,

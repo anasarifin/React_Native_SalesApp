@@ -10,14 +10,18 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './src/screens/Login';
+import Register from './src/screens/Register';
+import Main from './src/screens/Main';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} />
+      <Stack.Navigator initialRouteName="login" headerMode="none">
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="register" component={Register} />
+        <Stack.Screen name="main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );

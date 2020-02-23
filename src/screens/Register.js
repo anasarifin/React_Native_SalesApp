@@ -165,7 +165,11 @@ export default class Register extends React.Component {
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account?</Text>
           <TouchableOpacity>
-            <Text style={styles.registerButton}>Login</Text>
+            <Text
+              style={styles.registerButton}
+              onPress={() => this.props.navigation.navigate('login')}>
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
