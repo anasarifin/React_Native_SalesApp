@@ -127,7 +127,7 @@ export default class Register extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="rgba(0,0,0,.3)" translucent={true} />
+        <StatusBar backgroundColor="rgba(0,0,0,.3)" />
         <View style={styles.logoCon}>
           {/* <Image
             source={require('../images/bar-logo.png')}

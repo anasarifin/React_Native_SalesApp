@@ -5,27 +5,44 @@
  * @format
  * @flow
  */
-
-import React from 'react';
+import 'react-native-gesture-handler';
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import Login from './src/screens/Login';
-import Register from './src/screens/Register';
-import Main from './src/screens/Main';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+// import React from 'react';
+// import Login from './src/screens/Login';
+// import Register from './src/screens/Register';
+// import Main from './src/screens/Main';
+// import {
+//   SafeAreaView,
+//   StyleSheet,
+//   ScrollView,
+//   View,
+//   Text,
+//   StatusBar,
+// } from 'react-native';
+
+// import {
+//   Header,
+//   LearnMoreLinks,
+//   Colors,
+//   DebugInstructions,
+//   ReloadInstructions,
+// } from 'react-native/Libraries/NewAppScreen';
 
 // class Main extends React.Component {
 //   render() {
@@ -120,10 +137,10 @@ import {
 //   },
 // });
 
-class App extends React.Component {
-  render() {
-    return <Register />;
-  }
-}
+// class App extends React.Component {
+//   render() {
+//     return <Register />;
+//   }
+// }
 
-export default App;
+// export default App;
