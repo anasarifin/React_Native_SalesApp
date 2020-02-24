@@ -8,10 +8,12 @@ import {
   FlatList,
   ActivityIndicator,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Modal from '../components/Modal';
 import Pagination from '../components/Pagination';
+// import {TouchableHighlight} from 'react-native-gesture-handler';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 
@@ -23,39 +25,15 @@ export default class Home extends React.Component {
   constructor() {
     super();
     this.state = {
-      data: [
-        {
-          id: 8,
-          name: 'Anago',
-          description: 'Eel Sushi',
-          price: 10000,
-          stock: 97,
-          image:
-            'http://localhost:9999/public/img/2020-02-19T15-16-25.516Zanago.jpg',
-          category_id: 0,
-          updated_at: '2020-02-19T15:16:25.000Z',
-          created_at: '2020-02-04T13:13:14.000Z',
-        },
-        {
-          id: 36,
-          name: 'Karaage',
-          description: 'Fried Chicken',
-          price: 50000,
-          stock: 100,
-          image:
-            'http://localhost:9999/public/img/2020-02-20T06-36-37.412Zkaraage.jpg',
-          category_id: 0,
-          updated_at: '2020-02-20T06:36:37.000Z',
-          created_at: '2020-02-20T06:36:37.000Z',
-        },
-      ],
+      data: [],
+      dataEdit: [],
       fetchComplete: false,
       show: false,
       currentPage: 1,
     };
+    // this.fillModal = this.fillModal.bind(this);
     this.toRupiah = this.toRupiah.bind(this);
     this.showModal = this.showModal.bind(this);
-    this.fillModal = this.fillModal.bind(this);
     this.changePage = this.changePage.bind(this);
   }
   getData() {
@@ -97,15 +75,21 @@ export default class Home extends React.Component {
     });
   }
 
-  fillModal(item) {
-    this.setState({
-      data: item,
-    });
-  }
+  // fillModal = item => {
+  //   console.log(item);
+  //   // this.setState({
+  //   //   data: item,
+  //   // });
+  // };
 
   renderItem({item}) {
     return (
-      <View style={styles.listCon}>
+      <TouchableOpacity
+        style={styles.listCon}
+        onLongPress={() => {
+          this.setState({dataEdit: item});
+          this.showModal();
+        }}>
         <Image
           source={{uri: item.image.replace('localhost', '100.24.32.116')}}
           style={styles.listImg}
@@ -114,8 +98,7 @@ export default class Home extends React.Component {
           <Text style={styles.listText}>{item.name}</Text>
           <Text style={styles.listText}>Rp. {item.price}</Text>
         </View>
-        <Text onPress={() => this.setState({data: item})}>Edit</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -135,8 +118,8 @@ export default class Home extends React.Component {
         {this.state.fetchComplete ? (
           <FlatList
             data={this.state.data}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index}
+            renderItem={this.renderItem.bind(this)}
+            keyExtractor={(item, index) => index.toString()}
           />
         ) : (
           <ActivityIndicator size="large" style={styles.loading} />
@@ -146,7 +129,7 @@ export default class Home extends React.Component {
           <Modal
             show={this.state.show}
             event={this.showModal}
-            data={this.state.data}
+            data={this.state.dataEdit}
           />
         </View>
       </View>
@@ -157,7 +140,7 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'salmon',
+    backgroundColor: 'whitesmoke',
     paddingTop: 30,
     paddingHorizontal: 10,
     paddingVertical: 5,

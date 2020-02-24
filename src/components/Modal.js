@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, BackHandler, Alert, Modal} from 'react-native';
+import {View, Text, TextInput, BackHandler, Alert, Modal} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default class Modalx extends React.Component {
@@ -27,7 +27,14 @@ export default class Modalx extends React.Component {
   //     return false;
   //   }
 
+  textChange(value, type) {
+    this.setState({
+      [type]: value,
+    });
+  }
+
   render() {
+    // this.getName();
     return (
       <SafeAreaView>
         <Modal
@@ -39,9 +46,21 @@ export default class Modalx extends React.Component {
           //   }
         >
           <View>
-            <View>
-              <Text onPress={this.props.event}>>Hello World!</Text>
-            </View>
+            <TextInput defaultValue={this.props.data.name} />
+            <TextInput defaultValue={this.props.data.description} />
+            <TextInput
+              defaultValue={
+                this.props.data.price ? this.props.data.price.toString() : ''
+              }
+              keyboardType={'numeric'}
+            />
+            <TextInput
+              defaultValue={
+                this.props.data.stock ? this.props.data.stock.toString() : ''
+              }
+              keyboardType={'numeric'}
+            />
+            <Text onPress={this.props.event}>Hide</Text>
           </View>
         </Modal>
       </SafeAreaView>

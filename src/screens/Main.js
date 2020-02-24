@@ -5,8 +5,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './Home';
 import History from './History';
 import MainCarts from './MainCarts';
-import Modal from '../components/Modal';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Modal from './Modal';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -22,7 +24,7 @@ function Main() {
         options={{
           tabBarIcon: () => (
             <View>
-              <Icon style={styles.icon} size={25} name={'home'} />
+              <AntDesign style={styles.icon} size={25} name={'home'} />
             </View>
           ),
         }}
@@ -33,29 +35,34 @@ function Main() {
         options={{
           tabBarIcon: () => (
             <View>
-              <Icon style={styles.icon} size={25} name={'areachart'} />
+              <AntDesign style={styles.icon} size={25} name={'areachart'} />
             </View>
           ),
         }}
       />
       <Tab.Screen
         name="Cart"
-        component={MainCarts}
+        component={Modal}
         options={{
           tabBarIcon: () => (
             <View>
-              <Icon style={styles.icon} size={25} name={'areachart'} />
+              <Material style={styles.icon} size={25} name={'cart-outline'} />
             </View>
           ),
         }}
       />
       <Tab.Screen
-        name="Modal"
+        name="Add"
         component={Modal}
+        initialParams={{show: true}}
         options={{
           tabBarIcon: () => (
             <View>
-              <Icon style={styles.icon} size={25} name={'areachart'} />
+              <Ionicons
+                style={styles.icon}
+                size={25}
+                name={'md-add-circle-outline'}
+              />
             </View>
           ),
         }}

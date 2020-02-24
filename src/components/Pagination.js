@@ -23,15 +23,13 @@ export default class Pagination extends React.Component {
     });
   }
 
-  changePage(x) {
-    console.log(x);
-  }
+  changePage(x) {}
 
   render() {
     const page = [];
     for (let x = 1; x <= this.state.totalPage; x++) {
       page.push(
-        <Text onPress={this.changePage(x)} style={styles.page}>
+        <Text key={x} onPress={this.changePage(x)} style={styles.page}>
           {x}
         </Text>,
       );
