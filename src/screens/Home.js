@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  Right,
   ActivityIndicator,
   StatusBar,
   TouchableOpacity,
@@ -13,7 +14,9 @@ import {
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Modal from '../components/Modal';
 import Pagination from '../components/Pagination';
-// import {TouchableHighlight} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
+import {add} from '../redux/actions/cart';
+import {connect} from 'react-redux';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 
@@ -21,7 +24,7 @@ const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 //   return <Text>{this.props.data.name}</Text>;
 // }
 
-export default class Home extends React.Component {
+class Home extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -36,15 +39,8 @@ export default class Home extends React.Component {
     this.showModal = this.showModal.bind(this);
     this.changePage = this.changePage.bind(this);
   }
+
   getData() {
-    // fetch(url)
-    //   .then(response => response.json())
-    //   .then(resolve => {
-    //     this.setState({
-    //       data: resolve,
-    //     });
-    //   })
-    //   .catch(err => console.warn(err));
     Axios.get(url + this.state.currentPage)
       .then(resolve => {
         this.setState({
@@ -55,6 +51,11 @@ export default class Home extends React.Component {
       .catch(err => {
         console.warn(err);
       });
+  }
+
+  addToCart(item) {
+    this.props.dispatch(add(item));
+    // this.props.dispatch(add(item));
   }
 
   toRupiah(number) {
@@ -86,6 +87,7 @@ export default class Home extends React.Component {
     return (
       <TouchableOpacity
         style={styles.listCon}
+        onPress={() => this.addToCart(item)}
         onLongPress={() => {
           this.setState({dataEdit: item});
           this.showModal();
@@ -95,8 +97,8 @@ export default class Home extends React.Component {
           style={styles.listImg}
         />
         <View style={styles.listTextCon}>
-          <Text style={styles.listText}>{item.name}</Text>
-          <Text style={styles.listText}>Rp. {item.price}</Text>
+          <Text style={styles.listName}>{item.name}</Text>
+          <Text style={styles.listPrice}>Rp. {item.price}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -114,17 +116,20 @@ export default class Home extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="rgba(0,0,0,.3)" translucent={true} />
-        <Text onPress={this.showModal}>Show Modal</Text>
         {this.state.fetchComplete ? (
-          <FlatList
-            data={this.state.data}
-            renderItem={this.renderItem.bind(this)}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          <View style={styles.flatCon}>
+            <ScrollView>
+              <FlatList
+                data={this.state.data}
+                renderItem={this.renderItem.bind(this)}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </ScrollView>
+            <Pagination page={this.changePage} style={styles.page} />
+          </View>
         ) : (
           <ActivityIndicator size="large" style={styles.loading} />
         )}
-        <Pagination page={this.changePage} />
         <View style={styles.modal}>
           <Modal
             show={this.state.show}
@@ -150,16 +155,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 5,
   },
+  flatCon: {
+    flex: 1,
+  },
   listImg: {
+    flex: 1,
     width: 150,
-    height: 150,
+    height: 100,
+    borderRadius: 7,
   },
   listTextCon: {
-    justifyContent: 'flex-end',
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 20,
   },
-  listText: {
+  listName: {
     fontSize: 20,
-    marginHorizontal: 10,
+    fontWeight: 'bold',
+  },
+  listPrice: {
+    fontSize: 20,
   },
   loading: {
     flex: 1,
@@ -167,4 +183,12 @@ const styles = StyleSheet.create({
   modal: {
     position: 'absolute',
   },
+  page: {},
 });
+
+const mapStateToProps = state => {
+  return {
+    cart: state.cart,
+  };
+};
+export default connect(mapStateToProps)(Home);

@@ -14,10 +14,12 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Main from './src/screens/Main';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Provider} from 'react-redux';
+import store from './src/redux/store';
 
 const Stack = createStackNavigator();
 
-export default class App extends React.Component {
+class AppWithRedux extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -52,6 +54,16 @@ export default class App extends React.Component {
     );
   }
 }
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <AppWithRedux />
+    </Provider>
+  );
+};
+
+export default App;
 
 // import React from 'react';
 // import Login from './src/screens/Login';

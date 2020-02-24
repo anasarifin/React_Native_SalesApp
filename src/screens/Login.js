@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Axios from 'axios';
-// import {StackActions} from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const url = 'http://100.24.32.116:9999/api/v1/login';
@@ -42,7 +42,7 @@ export default class Login extends React.Component {
     }).then(resolve => {
       if (resolve.data.token) {
         AsyncStorage.setItem('token', resolve.data.token);
-        this.props.navigation.navigate('main');
+        this.props.navigation.dispatch(StackActions.replace('main'));
       } else {
         this.setState({loading: false, warning: resolve.data.warning});
       }
@@ -78,6 +78,7 @@ export default class Login extends React.Component {
             style={styles.inputText}
             placeholder="Username"
             placeholderTextColor="rgba(0,0,0,.5)"
+            autoCapitalize="none"
             onChange={e => this.setState({username: e.nativeEvent.text})}
           />
           <TextInput
@@ -122,6 +123,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textCon: {
+    position: 'relative',
+    zIndex: 10,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -131,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: -200,
+    zIndex: 1,
   },
   logo: {
     width: 170,
