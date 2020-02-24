@@ -8,10 +8,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Button,
-  AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 import Axios from 'axios';
+// import {StackActions} from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const url = 'http://100.24.32.116:9999/api/v1/login';
 
@@ -22,6 +23,7 @@ export default class Login extends React.Component {
       username: '',
       password: '',
       warning: false,
+      loading: false,
     };
     this.setUsername = this.setUsername.bind(this);
     this.setPassword = this.setPassword.bind(this);
@@ -29,6 +31,9 @@ export default class Login extends React.Component {
   }
 
   login() {
+    this.setState({
+      loading: true,
+    });
     // console.log(this.state.username);
     // console.log(this.state.password);
     Axios.post(url, {
@@ -39,7 +44,7 @@ export default class Login extends React.Component {
         AsyncStorage.setItem('token', resolve.data.token);
         this.props.navigation.navigate('main');
       } else {
-        this.setState({warning: resolve.data.warning});
+        this.setState({loading: false, warning: resolve.data.warning});
       }
     });
   }
@@ -87,7 +92,13 @@ export default class Login extends React.Component {
               Login
             </Text>
           </TouchableOpacity>
+          <ActivityIndicator
+            style={this.state.loading ? styles.loadingOn : styles.loading}
+            color="#ff5722"
+            size="large"
+          />
         </View>
+
         <View style={styles.footer}>
           <Text style={styles.footerText}>Don't have an account?</Text>
           <TouchableOpacity>
@@ -163,5 +174,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  loading: {
+    position: 'absolute',
+    bottom: 50,
+    opacity: 0,
+  },
+  loadingOn: {
+    position: 'absolute',
+    bottom: 50,
+    opacity: 1,
   },
 });

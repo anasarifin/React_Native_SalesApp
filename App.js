@@ -6,25 +6,51 @@
  * @flow
  */
 import 'react-native-gesture-handler';
-import * as React from 'react';
+import React from 'react';
+import {BackHandler, ToastAndroid} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Main from './src/screens/Main';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Stack = createStackNavigator();
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="login" headerMode="none">
-        <Stack.Screen name="login" component={Login} />
-        <Stack.Screen name="register" component={Register} />
-        <Stack.Screen name="main" component={Main} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export default class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      login: false,
+    };
+  }
+  checkLogin = async () => {
+    const login = await AsyncStorage.getItem('token');
+    if (login) {
+      this.setState({
+        login: true,
+      });
+    }
+  };
+
+  render() {
+    this.checkLogin();
+    return (
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName={this.state.login ? 'main' : 'main'}
+          headerMode="none">
+          <Stack.Screen name="login" component={Login} />
+          <Stack.Screen name="register" component={Register} />
+          <Stack.Screen
+            name="main"
+            component={Main}
+            options={{gestureEnabled: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
 
 // import React from 'react';
