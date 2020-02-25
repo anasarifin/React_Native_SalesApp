@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  TextInput,
+  Picker,
   StyleSheet,
   TouchableOpacity,
   Modal,
@@ -13,11 +13,12 @@ import {Input, Button} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 import Axios from 'axios';
+import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const url = 'http://100.24.32.116:9999/api/v1/products';
 
-export default class Modalx extends React.Component {
+class Modalx extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -56,8 +57,8 @@ export default class Modalx extends React.Component {
     formData.append('description', this.state.description);
     formData.append('price', this.state.price);
     formData.append('stock', this.state.stock);
-    formData.append('image', 'file://storage/emulated/0/Download/images.jpg');
-    formData.append('category_id', 0);
+    formData.append('image', null);
+    formData.append('category_id', this.state.category);
     console.log('ok');
     Axios.post(url, formData, {
       headers: {
@@ -88,17 +89,27 @@ export default class Modalx extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        // const source = {uri: response.uri};
+        const source = {uri: response.uri};
         // console.log(response.path);
 
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
-          image: response.path,
+          image: source,
         });
       }
     });
   };
+
+  // setCategory() {
+  //   this.setState({
+  //     category: this.props.data.category_id,
+  //   });
+  // }
+
+  // componentDidMount() {
+  //   this.setCategory();
+  // }
 
   render() {
     // this.getName();
@@ -154,19 +165,28 @@ export default class Modalx extends React.Component {
           <TouchableOpacity onPress={this.picker}>
             <Text>Image</Text>
           </TouchableOpacity>
-          <Image source={this.state.imageSource} />
-          <Button
-            title="Change"
-            buttonStyle={styles.button}
-            containerStyle={styles.buttonCon}
-            onPress={this.postData}
-          />
-          <Button
-            title="Delete"
-            buttonStyle={styles.buttonRed}
-            containerStyle={styles.buttonCon}
-          />
+          <Image source={this.state.image} />
+          <Picker
+            selectedValue={this.state.category}
+            style={styles.picker}
+            onValueChange={value => this.setState({category: value})}>
+            {this.props.category.categoryList.map(item => {
+              return <Picker.Item label={item.name} value={item.id} />;
+            })}
+          </Picker>
         </View>
+        <Button
+          title="Change"
+          buttonStyle={styles.button}
+          containerStyle={styles.buttonCon}
+          onPress={this.postData}
+        />
+        <Button
+          title="Delete"
+          buttonStyle={styles.buttonRed}
+          containerStyle={styles.buttonCon}
+          onPress={() => console.log(this.state.image)}
+        />
       </Modal>
     );
   }
@@ -176,6 +196,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'whitesmoke',
   },
   inputCon: {
@@ -201,6 +222,11 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 20,
   },
+  picker: {
+    width: '60%',
+    textAlign: 'center',
+    height: 50,
+  },
   button: {
     width: '85%',
   },
@@ -210,6 +236,14 @@ const styles = StyleSheet.create({
   },
   buttonCon: {
     alignItems: 'center',
-    marginBottom: 25,
+    marginBottom: 15,
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    category: state.category,
+  };
+};
+
+export default connect(mapStateToProps)(Modalx);

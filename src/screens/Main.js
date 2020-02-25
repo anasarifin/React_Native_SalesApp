@@ -11,10 +11,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {connect} from 'react-redux';
+import {category} from '../redux/actions/category';
 
 const Tab = createMaterialBottomTabNavigator();
 
 class Main extends React.Component {
+  getCategory() {
+    this.props.dispatch(category());
+  }
+
+  componentDidMount() {
+    this.getCategory();
+  }
+
   render() {
     return (
       <Tab.Navigator

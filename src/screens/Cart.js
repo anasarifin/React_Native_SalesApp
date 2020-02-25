@@ -31,7 +31,7 @@ class Cart extends React.Component {
       dataEdit: [],
       fetchComplete: false,
       show: false,
-      currentPage: 1,
+      order: [],
     };
     // this.fillModal = this.fillModal.bind(this);
     this.toRupiah = this.toRupiah.bind(this);
