@@ -11,13 +11,11 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Modal from '../components/Modal';
-import Pagination from '../components/Pagination';
-import {ScrollView} from 'react-native-gesture-handler';
-import {add} from '../redux/actions/cart';
-import {connect} from 'react-redux';
+import {Button} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {ScrollView} from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
+import {reset} from '../redux/actions/cart';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 
@@ -25,7 +23,7 @@ const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 //   return <Text>{this.props.data.name}</Text>;
 // }
 
-class Home extends React.Component {
+class Cart extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -37,11 +35,12 @@ class Home extends React.Component {
     };
     // this.fillModal = this.fillModal.bind(this);
     this.toRupiah = this.toRupiah.bind(this);
-    this.showModal = this.showModal.bind(this);
+    // this.showModal = this.showModal.bind(this);
     this.changePage = this.changePage.bind(this);
+    this.resetCart = this.resetCart.bind(this);
   }
 
-  getData() {
+  getCart() {
     Axios.get(url + this.state.currentPage)
       .then(resolve => {
         this.setState({
@@ -54,9 +53,9 @@ class Home extends React.Component {
       });
   }
 
-  addToCart(item) {
-    this.props.dispatch(add(item));
-    // this.props.dispatch(add(item));
+  resetCart() {
+    // console.log(this.props);
+    this.props.dispatch(reset());
   }
 
   toRupiah(number) {
@@ -71,11 +70,11 @@ class Home extends React.Component {
     return rupiah;
   }
 
-  showModal() {
-    this.setState({
-      show: this.state.show ? false : true,
-    });
-  }
+  //   showModal() {
+  //     this.setState({
+  //       show: this.state.show ? false : true,
+  //     });
+  //   }
 
   // fillModal = item => {
   //   console.log(item);
@@ -86,39 +85,25 @@ class Home extends React.Component {
 
   renderItem({item}) {
     return (
-      <TouchableOpacity
-        style={styles.listCon}
-        onPress={() =>
-          this.props.cart.cartList.some(x => x.id === item.id)
-            ? false
-            : this.addToCart(item)
-        }
-        onLongPress={() => {
-          this.setState({dataEdit: item});
-          this.showModal();
-        }}>
-        <View>
-          <Image
-            source={{uri: item.image.replace('localhost', '100.24.32.116')}}
-            style={styles.listImg}
-          />
-          {this.props.cart.cartList.some(x => x.id === item.id) ? (
-            <View style={styles.clicked}>
-              <Ionicons
-                size={50}
-                name="ios-checkmark-circle-outline"
-                style={styles.icon}
-              />
-            </View>
-          ) : (
-            <Text style={styles.dummy}> </Text>
-          )}
-        </View>
+      <View style={styles.listCon}>
+        <Image
+          source={{uri: item.image.replace('localhost', '100.24.32.116')}}
+          style={styles.listImg}
+        />
         <View style={styles.listTextCon}>
           <Text style={styles.listName}>{item.name}</Text>
+          <View style={styles.orderCon}>
+            <TouchableOpacity style={styles.orderButton}>
+              <Ionicons style={styles.icon} size={25} name={'ios-remove'} />
+            </TouchableOpacity>
+            <Text style={styles.orderButton}>1</Text>
+            <TouchableOpacity style={styles.orderButton}>
+              <Ionicons style={styles.icon} size={25} name={'ios-add'} />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.listPrice}>Rp. {this.toRupiah(item.price)}</Text>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 
@@ -126,35 +111,43 @@ class Home extends React.Component {
     console.log('ini nih = ' + x);
   }
 
-  componentDidMount() {
-    this.getData();
-  }
+  //   componentDidMount() {
+  //     this.getCart();
+  //   }
 
   render() {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="rgba(0,0,0,.3)" translucent={true} />
-        {this.state.fetchComplete ? (
-          <View style={styles.flatCon}>
-            <ScrollView>
-              <FlatList
-                data={this.state.data}
-                renderItem={this.renderItem.bind(this)}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </ScrollView>
-            <Pagination page={this.changePage} style={styles.page} />
-          </View>
-        ) : (
-          <ActivityIndicator size="large" style={styles.loading} />
-        )}
-        <View style={styles.modal}>
+        <Text onPress={() => console.log(this.props.cart)}>Check</Text>
+        <View style={styles.flatCon}>
+          <ScrollView>
+            <FlatList
+              data={this.props.cart.cartList}
+              renderItem={this.renderItem.bind(this)}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </ScrollView>
+          <Button
+            title="Checkout"
+            containerStyle={styles.buttonCon}
+            buttonStyle={styles.button}
+          />
+          <Button
+            onPress={this.resetCart}
+            title="Cancel"
+            containerStyle={styles.buttonCon}
+            buttonStyle={styles.buttonRed}
+          />
+        </View>
+
+        {/* <View style={styles.modal}>
           <Modal
             show={this.state.show}
             event={this.showModal}
             data={this.state.dataEdit}
           />
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -185,8 +178,8 @@ const styles = StyleSheet.create({
   listTextCon: {
     flex: 2,
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: 20,
+    alignItems: 'flex-start',
+    paddingLeft: 15,
   },
   listName: {
     fontSize: 20,
@@ -195,25 +188,30 @@ const styles = StyleSheet.create({
   listPrice: {
     fontSize: 20,
   },
+  orderCon: {
+    flexDirection: 'row',
+    marginVertical: 5,
+  },
+  orderButton: {
+    marginHorizontal: 10,
+    fontSize: 18,
+  },
   loading: {
     flex: 1,
   },
   modal: {
     position: 'absolute',
   },
-  clicked: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0,0,0,.6)',
-    width: '100%',
-    height: '100%',
+  button: {
+    width: '95%',
+  },
+  buttonRed: {
+    width: '95%',
+    backgroundColor: 'red',
+  },
+  buttonCon: {
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    color: 'rgba(255,255,255,.75)',
-  },
-  dummy: {
-    position: 'absolute',
+    marginBottom: 10,
   },
 });
 
@@ -222,4 +220,4 @@ const mapStateToProps = state => {
     cart: state.cart,
   };
 };
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(Cart);

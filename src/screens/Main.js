@@ -1,77 +1,92 @@
 import React from 'react';
-import Axios from 'axios';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+// import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Badge} from 'react-native-elements';
 import Home from './Home';
 import History from './History';
-import MainCarts from './MainCarts';
 import Modal from './Modal';
+import Cart from './Cart';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {ScrollView} from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
 
 const Tab = createMaterialBottomTabNavigator();
 
-function Main() {
-  return (
-    <Tab.Navigator initialRouteName="Home" shifting={true} backBehavior="none">
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: () => (
-            <View>
-              <AntDesign style={styles.icon} size={25} name={'home'} />
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="History"
-        component={History}
-        options={{
-          tabBarIcon: () => (
-            <View>
-              <AntDesign style={styles.icon} size={25} name={'areachart'} />
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Cart"
-        component={Modal}
-        options={{
-          tabBarIcon: () => (
-            <View>
-              <Material style={styles.icon} size={25} name={'cart-outline'} />
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Add"
-        component={Modal}
-        initialParams={{show: true}}
-        options={{
-          tabBarIcon: () => (
-            <View>
-              <Ionicons
-                style={styles.icon}
-                size={25}
-                name={'md-add-circle-outline'}
-              />
-            </View>
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
+class Main extends React.Component {
+  render() {
+    return (
+      <Tab.Navigator
+        initialRouteName="Home"
+        shifting={true}
+        backBehavior="none">
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarIcon: () => (
+              <View>
+                <AntDesign style={styles.icon} size={25} name={'home'} />
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="History"
+          component={History}
+          options={{
+            tabBarIcon: () => (
+              <View>
+                <AntDesign style={styles.icon} size={25} name={'areachart'} />
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Cart"
+          component={Cart}
+          options={{
+            tabBarIcon: () => (
+              <View>
+                {this.props.cart.cartList.length > 0 ? (
+                  <Badge
+                    value={this.props.cart.cartList.length}
+                    status="error"
+                    containerStyle={styles.badgeCon}
+                    textStyle={styles.badgeText}
+                    badgeStyle={styles.badge}
+                  />
+                ) : (
+                  <Text style={styles.dummy}> </Text>
+                )}
+
+                <Material style={styles.icon} size={25} name={'cart-outline'} />
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Add"
+          component={Modal}
+          initialParams={{show: true}}
+          options={{
+            tabBarIcon: () => (
+              <View>
+                <Ionicons
+                  style={styles.icon}
+                  size={25}
+                  name={'md-add-circle-outline'}
+                />
+              </View>
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
 }
 
-export default Main;
 // const url = 'http://192.168.42.142:9999/api/v1/products';
 
 // export default class Main extends React.Component {
@@ -198,4 +213,28 @@ const styles = StyleSheet.create({
   icon: {
     color: 'white',
   },
+  badgeCon: {
+    position: 'absolute',
+    zIndex: 10,
+    right: -9,
+    top: -5,
+  },
+  badgeText: {
+    fontSize: 12,
+    marginBottom: 2,
+  },
+  badge: {
+    width: 20,
+    height: 20,
+  },
+  dummy: {
+    position: 'absolute',
+  },
 });
+
+const mapStateToProps = state => {
+  return {
+    cart: state.cart,
+  };
+};
+export default connect(mapStateToProps)(Main);
