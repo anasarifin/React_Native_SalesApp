@@ -1,20 +1,11 @@
 const initialValue = {
-  categoryList: [
-    {
-      id: 0,
-      name: 'Sushi',
-    },
-    {
-      id: 1,
-      name: 'Frieds',
-    },
-  ],
+  categoryList: [{id: 0, name: 'sushi'}],
   isPending: false,
   isRejected: false,
   isFulfilled: false,
 };
 
-const getCategory = (state = initialValue, action) => {
+const getProducts = (state = initialValue, action) => {
   switch (action.type) {
     case 'GET_CATEGORY_PENDING':
       return {
@@ -38,4 +29,4 @@ const getCategory = (state = initialValue, action) => {
   }
 };
 
-export default getCategory;
+export default getProducts;

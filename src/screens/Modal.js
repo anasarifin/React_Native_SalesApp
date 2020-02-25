@@ -155,7 +155,7 @@ class Modalx extends React.Component {
             selectedValue={this.state.category}
             style={styles.picker}
             onValueChange={value => this.setState({category: value})}>
-            {this.props.category.categoryList.map(item => {
+            {this.props.products.categoryList.map(item => {
               return (
                 <Picker.Item label={item.name} value={parseFloat(item.id)} />
               );
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    category: state.category,
+    products: state.products,
   };
 };
 

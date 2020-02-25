@@ -119,27 +119,35 @@ class Cart extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="rgba(0,0,0,.3)" translucent={true} />
-        <Text onPress={() => console.log(this.props.cart)}>Check</Text>
-        <View style={styles.flatCon}>
-          <ScrollView>
-            <FlatList
-              data={this.props.cart.cartList}
-              renderItem={this.renderItem.bind(this)}
-              keyExtractor={(item, index) => index.toString()}
+        {this.props.cart.cartList.length > 0 ? (
+          <View style={styles.flatCon}>
+            <ScrollView>
+              <FlatList
+                data={this.props.cart.cartList}
+                renderItem={this.renderItem.bind(this)}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </ScrollView>
+            <Button
+              title="Checkout"
+              containerStyle={styles.buttonCon}
+              buttonStyle={styles.button}
             />
-          </ScrollView>
-          <Button
-            title="Checkout"
-            containerStyle={styles.buttonCon}
-            buttonStyle={styles.button}
-          />
-          <Button
-            onPress={this.resetCart}
-            title="Cancel"
-            containerStyle={styles.buttonCon}
-            buttonStyle={styles.buttonRed}
-          />
-        </View>
+            <Button
+              onPress={this.resetCart}
+              title="Cancel"
+              containerStyle={styles.buttonCon}
+              buttonStyle={styles.buttonRed}
+            />
+          </View>
+        ) : (
+          <View style={styles.emptyCon}>
+            <Image
+              source={require('../images/empty.png')}
+              style={styles.empty}
+            />
+          </View>
+        )}
 
         {/* <View style={styles.modal}>
           <Modal
@@ -212,6 +220,15 @@ const styles = StyleSheet.create({
   buttonCon: {
     alignItems: 'center',
     marginBottom: 10,
+  },
+  empty: {
+    width: '100%',
+    maxWidth: 500,
+    marginTop: 100,
+    resizeMode: 'contain',
+  },
+  emptyCon: {
+    alignItems: 'center',
   },
 });
 

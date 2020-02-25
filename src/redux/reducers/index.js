@@ -1,13 +1,13 @@
 import {combineReducers} from 'redux';
 // import countReducer from './count';
 import moveToCart from './cart';
-import getCategory from './category';
+import getProducts from './products';
 // import getCategory from './category';
 
 const reducers = combineReducers({
   //   count: countReducer,
   cart: moveToCart,
-  category: getCategory,
+  products: getProducts,
 });
 
 export default reducers;

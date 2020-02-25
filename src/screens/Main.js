@@ -3,6 +3,7 @@ import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
 // import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Badge} from 'react-native-elements';
 import Home from './Home';
+import Drawer from './Drawer';
 import History from './History';
 import Modal from './Modal';
 import Cart from './Cart';
@@ -11,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {connect} from 'react-redux';
-import {category} from '../redux/actions/category';
+import {category} from '../redux/actions/products';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -32,7 +33,7 @@ class Main extends React.Component {
         backBehavior="none">
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={Drawer}
           options={{
             tabBarIcon: () => (
               <View>

@@ -8,6 +8,7 @@ import {
   Modal,
   StatusBar,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -23,10 +24,12 @@ class Modalx extends React.Component {
     super();
     this.state = {
       show: false,
+      image: {uri: false},
     };
     this.hideModal = this.hideModal.bind(this);
     this.picker = this.picker.bind(this);
     this.postData = this.postData.bind(this);
+    this.deleteData = this.deleteData.bind(this);
   }
 
   hideModal() {
@@ -57,7 +60,7 @@ class Modalx extends React.Component {
     formData.append('description', this.state.description);
     formData.append('price', this.state.price);
     formData.append('stock', this.state.stock);
-    formData.append('image', null);
+    formData.append('image', this.state.image);
     formData.append('category_id', this.state.category);
     console.log('ok');
     Axios.post(url, formData, {
@@ -70,6 +73,22 @@ class Modalx extends React.Component {
       })
       .catch(reject => {
         console.log(reject);
+      });
+  }
+
+  deleteData() {
+    Axios.delete(url + '/' + this.props.data.id, {
+      headers: {
+        usertoken: AsyncStorage.getItem('token'),
+      },
+    })
+      .then(resolve => {
+        this.props.event();
+        ToastAndroid.show('Delete success!', ToastAndroid.SHORT);
+      })
+      .catch(reject => {
+        this.props.event();
+        ToastAndroid.show('Delete failed!', ToastAndroid.SHORT);
       });
   }
 
@@ -89,13 +108,13 @@ class Modalx extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = {uri: response.uri};
-        // console.log(response.path);
-
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+        console.log(response.fileName);
+        console.log(response.fileSize);
+        console.log(response.type);
+        console.log(response.uri);
+        console.log(response.path);
         this.setState({
-          image: source,
+          image: response,
         });
       }
     });
@@ -165,12 +184,12 @@ class Modalx extends React.Component {
           <TouchableOpacity onPress={this.picker}>
             <Text>Image</Text>
           </TouchableOpacity>
-          <Image source={this.state.image} />
+          <Image source={{uri: this.state.image.uri}} />
           <Picker
             selectedValue={this.state.category}
             style={styles.picker}
             onValueChange={value => this.setState({category: value})}>
-            {this.props.category.categoryList.map(item => {
+            {this.props.products.categoryList.map(item => {
               return <Picker.Item label={item.name} value={item.id} />;
             })}
           </Picker>
@@ -185,7 +204,7 @@ class Modalx extends React.Component {
           title="Delete"
           buttonStyle={styles.buttonRed}
           containerStyle={styles.buttonCon}
-          onPress={() => console.log(this.state.image)}
+          onPress={this.deleteData}
         />
       </Modal>
     );
@@ -242,7 +261,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    category: state.category,
+    products: state.products,
   };
 };
 
