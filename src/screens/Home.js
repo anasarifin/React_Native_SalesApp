@@ -31,7 +31,7 @@ class Home extends React.Component {
     this.state = {
       data: [],
       dataEdit: [],
-      fetchComplete: false,
+      fetchComplete: true,
       show: false,
       currentPage: 1,
     };
@@ -126,9 +126,9 @@ class Home extends React.Component {
     console.log('ini nih = ' + x);
   }
 
-  componentDidMount() {
-    this.getData();
-  }
+  // componentDidMount() {
+  //   this.getData();
+  // }
 
   render() {
     return (
@@ -138,7 +138,7 @@ class Home extends React.Component {
           <View style={styles.flatCon}>
             <ScrollView>
               <FlatList
-                data={this.state.data}
+                data={this.props.products.productList}
                 renderItem={this.renderItem.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
               />
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     cart: state.cart,
+    products: state.products,
   };
 };
 export default connect(mapStateToProps)(Home);

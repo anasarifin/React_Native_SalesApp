@@ -12,17 +12,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {connect} from 'react-redux';
-import {category} from '../redux/actions/products';
+import {category, products} from '../redux/actions/products';
 
 const Tab = createMaterialBottomTabNavigator();
 
 class Main extends React.Component {
-  getCategory() {
+  getData() {
+    this.props.dispatch(products('http://100.24.32.116:9999/api/v1/products'));
     this.props.dispatch(category());
   }
 
   componentDidMount() {
-    this.getCategory();
+    this.getData();
   }
 
   render() {

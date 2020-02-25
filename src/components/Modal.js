@@ -16,6 +16,7 @@ import ImagePicker from 'react-native-image-picker';
 import Axios from 'axios';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import {products} from '../redux/actions/products';
 
 const url = 'http://100.24.32.116:9999/api/v1/products';
 
@@ -82,13 +83,19 @@ class Modalx extends React.Component {
         usertoken: AsyncStorage.getItem('token'),
       },
     })
-      .then(resolve => {
-        this.props.event();
+      .then(() => {
+        this.props.dispatch(
+          products('http://100.24.32.116:9999/api/v1/products'),
+        );
         ToastAndroid.show('Delete success!', ToastAndroid.SHORT);
-      })
-      .catch(reject => {
         this.props.event();
+      })
+      .catch(() => {
+        this.props.dispatch(
+          products('http://100.24.32.116:9999/api/v1/products'),
+        );
         ToastAndroid.show('Delete failed!', ToastAndroid.SHORT);
+        this.props.event();
       });
   }
 

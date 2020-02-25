@@ -7,9 +7,9 @@ export const category = () => {
   };
 };
 
-export const products = data => {
+export const products = url => {
   return {
     type: 'GET_PRODUCTS',
-    payload: Axios.get(),
+    payload: Axios.get(url),
   };
 };
