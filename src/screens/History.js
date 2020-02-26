@@ -80,29 +80,10 @@ export default class Home extends React.Component {
     this.props.navigation.navigate('login');
   }
 
-  renderItem({item}) {
-    return (
-      <View style={styles.listCon}>
-        <Image source={require('../images/sushi.jpg')} style={styles.listImg} />
-        <View style={styles.listTextCon}>
-          <Text style={styles.listText}>{item.name}</Text>
-          <Text style={styles.listText}>Rp. {item.price}</Text>
-        </View>
-      </View>
-    );
-  }
   render() {
     return (
       <View style={styles.container}>
-        <Text onPress={this.logout}>This is history page</Text>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          <View style={{width: 200}}>
-            <Text>1</Text>
-          </View>
-          <View style={{width: 150, backgroundColor: 'black'}}>
-            <Text>2</Text>
-          </View>
-        </View>
+        <Image style={styles.image} source={require('../images/soon.png')} />
       </View>
     );
   }
@@ -111,25 +92,12 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'salmon',
-    paddingTop: 30,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  listCon: {
-    flex: 1,
-    flexDirection: 'row',
-    marginVertical: 5,
-  },
-  listImg: {
-    width: 150,
-    height: 150,
-  },
-  listTextCon: {
-    justifyContent: 'flex-end',
-  },
-  listText: {
-    fontSize: 20,
-    marginHorizontal: 10,
+  image: {
+    resizeMode: 'contain',
+    width: '100%',
+    maxWidth: 650,
   },
 });

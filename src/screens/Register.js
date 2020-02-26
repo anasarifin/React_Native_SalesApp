@@ -8,8 +8,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Button,
+  ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
+import Axios from 'axios';
+
+const url = 'http://100.24.32.116:9999/api/v1/register';
 
 export default class Register extends React.Component {
   constructor() {
@@ -17,6 +21,7 @@ export default class Register extends React.Component {
     this.state = {
       warning: false,
       disabled: true,
+      loading: false,
     };
     this.checkUsername = this.checkUsername.bind(this);
     this.checkPassword = this.checkPassword.bind(this);
@@ -99,27 +104,52 @@ export default class Register extends React.Component {
   //   }
 
   submit() {
-    const regex = /[a-z0-9]+/gi;
+    const regex = /[a-z0-9]/gi;
+    const username = this.state.username;
+    const password = this.state.password;
     // console.log(regex.test(this.state.username));
-    if (this.state.username) {
-      console.log('username ok');
-      if (this.state.password) {
-        console.log('password ok');
+    if (
+      username &&
+      username.length >= 4 &&
+      username.length <= 12 &&
+      regex.test(username)
+    ) {
+      if (password && password.length >= 6 && regex.test(password)) {
         if (this.state.password === this.state.rePassword) {
-          console.log('re password ok');
+          this.setState({
+            loading: true,
+            warning: null,
+          });
+          Axios.post(url, {username: username, password: password})
+            .then(resolve => {
+              this.setState({
+                loading: false,
+              });
+              if (resolve.data.insertId) {
+                ToastAndroid.show('Register success!', ToastAndroid.SHORT);
+                this.props.navigation.navigate('login');
+              } else if (resolve.data.warning) {
+                this.setState({
+                  warning: resolve.data.warning,
+                });
+              }
+            })
+            .catch(reject => console.log(reject));
         } else {
           this.setState({
-            warning: 'Re-password must same!',
+            warning: 'Re-type password must same!',
           });
         }
       } else {
         this.setState({
-          warning: 'Password is not valid!',
+          warning:
+            'Password must contain min 6 character and not include special char!',
         });
       }
     } else {
       this.setState({
-        warning: 'Username is not valid!',
+        warning:
+          'Username must contain 4 - 12 character and not include special char!',
       });
     }
   }
@@ -129,14 +159,14 @@ export default class Register extends React.Component {
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="rgba(0,0,0,.3)" />
         <View style={styles.logoCon}>
-          {/* <Image
+          <Image
             source={require('../images/bar-logo.png')}
             style={styles.logo}
-          /> */}
+          />
           <Text>Sushi-Bar Cashier App</Text>
         </View>
         <View style={styles.textCon}>
-          <TextInput style={styles.warning}>{this.state.warning}</TextInput>
+          <Text style={styles.warning}>{this.state.warning}</Text>
 
           <TextInput
             style={styles.inputText}
@@ -161,6 +191,11 @@ export default class Register extends React.Component {
           <TouchableOpacity onPress={this.submit}>
             <Text style={styles.loginButton}>Register</Text>
           </TouchableOpacity>
+          <ActivityIndicator
+            style={this.state.loading ? styles.loadingOn : styles.loading}
+            color="rgba(30,90,255,.7)"
+            size="large"
+          />
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account?</Text>
@@ -185,6 +220,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textCon: {
+    marginTop: -60,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -198,6 +234,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 170,
     height: 170,
+    marginTop: -100,
     marginRight: -12,
   },
   inputText: {
@@ -226,6 +263,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'red',
+    width: 380,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   footer: {
     flexDirection: 'row',
@@ -238,5 +278,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  loading: {
+    position: 'absolute',
+    bottom: 40,
+    opacity: 0,
+  },
+  loadingOn: {
+    position: 'absolute',
+    bottom: 40,
+    opacity: 1,
   },
 });

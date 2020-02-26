@@ -78,13 +78,12 @@ export default class Login extends React.Component {
             style={styles.inputText}
             placeholder="Username"
             placeholderTextColor="rgba(0,0,0,.5)"
-            autoCapitalize="none"
             onChange={e => this.setState({username: e.nativeEvent.text})}
           />
           <TextInput
             style={styles.inputText}
-            placeholder="Password"
             secureTextEntry={true}
+            placeholder="Password"
             placeholderTextColor="rgba(0,0,0,.5)"
             onChange={e => this.setState({password: e.nativeEvent.text})}
           />
@@ -123,8 +122,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textCon: {
-    position: 'relative',
-    zIndex: 10,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -148,7 +145,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 20,
     fontSize: 20,
-    textAlign: 'center',
   },
   loginButton: {
     borderRadius: 20,

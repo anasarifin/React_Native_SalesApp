@@ -18,6 +18,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {add} from '../redux/actions/cart';
 import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 
@@ -132,12 +133,12 @@ class Home extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="rgba(0,0,0,.3)" translucent={true} />
-        {this.state.fetchComplete ? (
+        {this.props.products.productsComplete ? (
           <View style={styles.flatCon}>
             <ScrollView>
-              {this.props.products.productList.length > 0 ? (
+              {!this.props.products.productList.msg ? (
                 <FlatList
                   data={this.props.products.productList}
                   renderItem={this.renderItem.bind(this)}
@@ -150,10 +151,10 @@ class Home extends React.Component {
                 />
               )}
             </ScrollView>
-            <Pagination page={this.changePage} style={styles.page} />
+            {/* <Pagination page={this.changePage} style={styles.page} /> */}
           </View>
         ) : (
-          <ActivityIndicator size="large" style={styles.loading} />
+          <ActivityIndicator size="large" color="blue" style={styles.loading} />
         )}
         <View style={styles.modal}>
           <Modal
@@ -162,7 +163,7 @@ class Home extends React.Component {
             data={this.state.dataEdit}
           />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -171,9 +172,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'whitesmoke',
-    paddingTop: 30,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingLeft: 10,
   },
   listCon: {
     flex: 1,

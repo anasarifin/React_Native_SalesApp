@@ -18,6 +18,7 @@ import {connect} from 'react-redux';
 import {reset} from '../redux/actions/cart';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import CartList from './CartList';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 const urlCheckout = 'http://localhost:9999/api/v1/cart';
@@ -147,34 +148,33 @@ class Cart extends React.Component {
   //   });
   // }
 
-  renderItem({item}) {
-    return (
-      <View style={styles.listCon}>
-        <Image
-          source={{uri: item.image.replace('localhost', '100.24.32.116')}}
-          style={styles.listImg}
-        />
-        <Text>{item.stock}</Text>
-        <View style={styles.listTextCon}>
-          <Text style={styles.listName}>{item.name}</Text>
-          <View style={styles.orderCon}>
-            <TouchableOpacity
-              style={styles.orderButton}
-              onPress={this.reduceStock}>
-              <Ionicons style={styles.icon} size={25} name={'ios-remove'} />
-            </TouchableOpacity>
-            <Text style={styles.orderButton}>{this.state.order}</Text>
-            <TouchableOpacity
-              style={styles.orderButton}
-              onPress={this.addStock}>
-              <Ionicons style={styles.icon} size={25} name={'ios-add'} />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.listPrice}>Rp. {this.toRupiah(item.price)}</Text>
-        </View>
-      </View>
-    );
-  }
+  // renderItem({item}) {
+  //   return (
+  //     <View style={styles.listCon}>
+  //       <Image
+  //         source={{uri: item.image.replace('localhost', '100.24.32.116')}}
+  //         style={styles.listImg}
+  //       />
+  //       <View style={styles.listTextCon}>
+  //         <Text style={styles.listName}>{item.name}</Text>
+  //         <View style={styles.orderCon}>
+  //           <TouchableOpacity
+  //             style={styles.orderButton}
+  //             onPress={this.reduceStock}>
+  //             <Ionicons style={styles.icon} size={25} name={'ios-remove'} />
+  //           </TouchableOpacity>
+  //           <Text style={styles.orderButton}>{this.state.order}</Text>
+  //           <TouchableOpacity
+  //             style={styles.orderButton}
+  //             onPress={this.addStock}>
+  //             <Ionicons style={styles.icon} size={25} name={'ios-add'} />
+  //           </TouchableOpacity>
+  //         </View>
+  //         <Text style={styles.listPrice}>Rp. {this.toRupiah(item.price)}</Text>
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
   // changePage(x) {
   //   console.log('ini nih = ' + x);
@@ -191,11 +191,18 @@ class Cart extends React.Component {
         {this.props.cart.cartList.length > 0 ? (
           <View style={styles.flatCon}>
             <SafeAreaView>
-              <FlatList
+              {this.props.cart.cartList.length > 0 ? (
+                this.props.cart.cartList.map((item, index) => {
+                  return <CartList data={item} key={index} />;
+                })
+              ) : (
+                <Text>null</Text>
+              )}
+              {/* <FlatList
                 data={this.props.cart.cartList}
                 renderItem={this.renderItem.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
-              />
+              /> */}
             </SafeAreaView>
             <View style={styles.allButtonCon}>
               <Button

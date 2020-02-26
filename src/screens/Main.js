@@ -18,7 +18,9 @@ const Tab = createMaterialBottomTabNavigator();
 
 class Main extends React.Component {
   getData() {
-    this.props.dispatch(products('http://100.24.32.116:9999/api/v1/products'));
+    this.props.dispatch(
+      products('http://100.24.32.116:9999/api/v1/products?page=1'),
+    );
     this.props.dispatch(category());
   }
 
@@ -44,12 +46,17 @@ class Main extends React.Component {
           }}
         />
         <Tab.Screen
-          name="History"
-          component={History}
+          name="Add"
+          component={Modal}
+          initialParams={{show: true}}
           options={{
             tabBarIcon: () => (
               <View>
-                <AntDesign style={styles.icon} size={25} name={'areachart'} />
+                <Ionicons
+                  style={styles.icon}
+                  size={25}
+                  name={'md-add-circle-outline'}
+                />
               </View>
             ),
           }}
@@ -78,17 +85,12 @@ class Main extends React.Component {
           }}
         />
         <Tab.Screen
-          name="Add"
-          component={Modal}
-          initialParams={{show: true}}
+          name="History"
+          component={History}
           options={{
             tabBarIcon: () => (
               <View>
-                <Ionicons
-                  style={styles.icon}
-                  size={25}
-                  name={'md-add-circle-outline'}
-                />
+                <AntDesign style={styles.icon} size={25} name={'areachart'} />
               </View>
             ),
           }}

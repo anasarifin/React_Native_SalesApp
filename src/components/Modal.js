@@ -213,8 +213,10 @@ class Modalx extends React.Component {
             selectedValue={this.state.category}
             style={styles.picker}
             onValueChange={value => this.setState({category: value})}>
-            {this.props.products.categoryList.map(item => {
-              return <Picker.Item label={item.name} value={item.id} />;
+            {this.props.products.categoryList.map((item, index) => {
+              return (
+                <Picker.Item key={index} label={item.name} value={item.id} />
+              );
             })}
           </Picker>
         </View>

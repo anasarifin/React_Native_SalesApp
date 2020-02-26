@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  TextInput,
+  ToastAndroid,
   StyleSheet,
   TouchableOpacity,
   Picker,
@@ -77,6 +77,7 @@ class Modalx extends React.Component {
         this.props.dispatch(
           products('http://100.24.32.116:9999/api/v1/products?page=1'),
         );
+        ToastAndroid.show('Register success!', ToastAndroid.SHORT);
         this.props.navigation.navigate('Home');
       })
       .catch(reject => {

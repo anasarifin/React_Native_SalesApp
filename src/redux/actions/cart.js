@@ -28,3 +28,15 @@ export const resetPrice = () => {
     payload: 0,
   };
 };
+export const addOrder = index => {
+  return {
+    type: 'ADD_ORDER',
+    payload: index,
+  };
+};
+export const reduceOrder = index => {
+  return {
+    type: 'REDUCE_ORDER',
+    payload: index,
+  };
+};

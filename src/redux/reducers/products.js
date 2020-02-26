@@ -3,7 +3,7 @@ const initialValue = {
   productList: [],
   isPending: false,
   isRejected: false,
-  isFulfilled: false,
+  productsComplete: false,
 };
 
 const getProducts = (state = initialValue, action) => {
@@ -25,7 +25,7 @@ const getProducts = (state = initialValue, action) => {
     case 'GET_PRODUCTS_FULFILLED':
       return {
         ...state,
-        isFulfilled: true,
+        productsComplete: true,
         productList: action.payload.data,
       };
     default:

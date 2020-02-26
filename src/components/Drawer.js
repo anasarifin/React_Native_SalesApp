@@ -1,7 +1,10 @@
 import React from 'react';
-import {View, Picker, TextInput, StyleSheet} from 'react-native';
+import {View, Picker, TextInput, Text, StyleSheet, Button} from 'react-native';
+import {Input} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {products} from '../redux/actions/products';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=1';
 
@@ -63,11 +66,12 @@ class CustomDrawer extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
+        <Input
           placeholder="Search product here..."
           onChange={e => this.filterName(e.nativeEvent.text)}
         />
         <Picker
+          style={styles.picker}
           selectedValue={this.state.category}
           onValueChange={value => this.filterType(value)}>
           <Picker.Item label={'All'} value={''} />
@@ -78,6 +82,7 @@ class CustomDrawer extends React.Component {
           })}
         </Picker>
         <Picker
+          style={styles.picker}
           selectedValue={this.state.sort}
           onValueChange={value => this.filterSort(value)}>
           <Picker.Item label={'Name A-Z'} value={'name'} />
@@ -91,6 +96,9 @@ class CustomDrawer extends React.Component {
           <Picker.Item label={'Created Newer'} value={'created_at&dir=1'} />
           <Picker.Item label={'Created Older'} value={'created_at'} />
         </Picker>
+        <TouchableOpacity style={styles.logout} onPress={this.props.event}>
+          <Button title="   Logout   " color="red" style={styles.button} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -98,7 +106,15 @@ class CustomDrawer extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginTop: 35,
+    height: '100%',
+  },
+  logout: {
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  picker: {
+    marginTop: 15,
   },
 });
 

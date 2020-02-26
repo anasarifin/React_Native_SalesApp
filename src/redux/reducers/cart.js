@@ -1,5 +1,6 @@
 const initialValue = {
   cartList: [],
+  order: [],
   totalPrice: 0,
   isPending: false,
   isRejected: false,
@@ -34,11 +35,13 @@ const moveToCart = (state = initialValue, action) => {
       return {
         ...state,
         cartList: [...state.cartList, action.payload],
+        order: [...state.order, 1],
       };
     case 'CART_RESET':
       return {
         ...state,
         cartList: [],
+        order: [],
       };
     case 'CART_ADD_PRICE':
       return {
@@ -54,6 +57,18 @@ const moveToCart = (state = initialValue, action) => {
       return {
         ...state,
         totalPrice: 0,
+      };
+    case 'ADD_ORDER':
+      state.order.splice(action.payload, 1, state.order[action.payload] + 1);
+      return {
+        ...state,
+        order: state.order,
+      };
+    case 'REDUCE_ORDER':
+      state.order.splice(action.payload, 1, state.order[action.payload] - 1);
+      return {
+        ...state,
+        order: state.order,
       };
     default:
       return state;

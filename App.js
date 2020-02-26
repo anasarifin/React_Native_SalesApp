@@ -7,7 +7,7 @@
  */
 import 'react-native-gesture-handler';
 import React from 'react';
-import {BackHandler, ToastAndroid} from 'react-native';
+import {BackHandler, ToastAndroid, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './src/screens/Login';
@@ -33,23 +33,33 @@ class AppWithRedux extends React.Component {
         login: true,
       });
     }
+    this.setState({
+      complete: true,
+    });
   };
 
-  render() {
+  componentDidMount() {
     this.checkLogin();
+  }
+
+  render() {
     return (
       <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName={this.state.login ? 'main' : 'main'}
-          headerMode="none">
-          <Stack.Screen name="login" component={Login} />
-          <Stack.Screen name="register" component={Register} />
-          <Stack.Screen
-            name="main"
-            component={Main}
-            options={{gestureEnabled: false}}
-          />
-        </Stack.Navigator>
+        {this.state.complete ? (
+          <Stack.Navigator
+            initialRouteName={this.state.login ? 'main' : 'login'}
+            headerMode="none">
+            <Stack.Screen name="login" component={Login} />
+            <Stack.Screen name="register" component={Register} />
+            <Stack.Screen
+              name="main"
+              component={Main}
+              options={{gestureEnabled: false}}
+            />
+          </Stack.Navigator>
+        ) : (
+          <StatusBar />
+        )}
       </NavigationContainer>
     );
   }
