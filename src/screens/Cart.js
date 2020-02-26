@@ -252,7 +252,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 150,
     height: 100,
-    marginLeft: 10,
     borderRadius: 7,
   },
   listTextCon: {

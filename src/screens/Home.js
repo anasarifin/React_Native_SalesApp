@@ -137,11 +137,18 @@ class Home extends React.Component {
         {this.state.fetchComplete ? (
           <View style={styles.flatCon}>
             <ScrollView>
-              <FlatList
-                data={this.props.products.productList}
-                renderItem={this.renderItem.bind(this)}
-                keyExtractor={(item, index) => index.toString()}
-              />
+              {this.props.products.productList.length > 0 ? (
+                <FlatList
+                  data={this.props.products.productList}
+                  renderItem={this.renderItem.bind(this)}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              ) : (
+                <Image
+                  source={require('../images/empty.png')}
+                  style={styles.empty}
+                />
+              )}
             </ScrollView>
             <Pagination page={this.changePage} style={styles.page} />
           </View>

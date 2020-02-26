@@ -16,6 +16,7 @@ import ImagePicker from 'react-native-image-picker';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
+import {products} from '../redux/actions/products';
 
 const url = 'http://100.24.32.116:9999/api/v1/products';
 
@@ -72,8 +73,11 @@ class Modalx extends React.Component {
         usertoken: AsyncStorage.getItem('token'),
       },
     })
-      .then(resolve => {
-        console.log(resolve);
+      .then(() => {
+        this.props.dispatch(
+          products('http://100.24.32.116:9999/api/v1/products?page=1'),
+        );
+        this.props.navigation.navigate('Home');
       })
       .catch(reject => {
         console.log(reject);
@@ -96,12 +100,6 @@ class Modalx extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = {uri: response.uri};
-        console.log(response.fileName);
-        console.log(response.fileSize);
-        console.log(response.type);
-        console.log(response.path);
-
         this.setState({
           image: response,
         });

@@ -25,7 +25,7 @@ class Modalx extends React.Component {
     super();
     this.state = {
       show: false,
-      image: {uri: false},
+      image: {uri: null, type: null, fileName: null},
     };
     this.hideModal = this.hideModal.bind(this);
     this.picker = this.picker.bind(this);
@@ -56,24 +56,39 @@ class Modalx extends React.Component {
   }
 
   postData() {
+    console.log(url + '/' + this.props.data.id);
     const formData = new FormData();
-    formData.append('name', this.state.name);
-    formData.append('description', this.state.description);
-    formData.append('price', this.state.price);
-    formData.append('stock', this.state.stock);
-    formData.append('image', this.state.image);
-    formData.append('category_id', this.state.category);
-    console.log('ok');
-    Axios.post(url, formData, {
+    formData.append('name', this.state.name || this.props.data.name);
+    formData.append(
+      'description',
+      this.state.description || this.props.data.description,
+    );
+    formData.append('price', this.state.price || this.props.data.price);
+    formData.append('stock', this.state.stock || this.props.data.stock);
+    formData.append('image', {
+      uri: this.state.image.uri,
+      type: this.state.image.type,
+      name: this.state.image.fileName,
+    });
+    formData.append('category_id', this.state.category || 0);
+    Axios.patch(url + '/' + this.props.data.id, formData, {
       headers: {
         usertoken: AsyncStorage.getItem('token'),
       },
     })
-      .then(resolve => {
-        console.log(resolve);
+      .then(() => {
+        this.props.dispatch(
+          products('http://100.24.32.116:9999/api/v1/products'),
+        );
+        ToastAndroid.show('Edit success!', ToastAndroid.SHORT);
+        this.props.event();
       })
-      .catch(reject => {
-        console.log(reject);
+      .catch(() => {
+        this.props.dispatch(
+          products('http://100.24.32.116:9999/api/v1/products'),
+        );
+        ToastAndroid.show('Edit failed!', ToastAndroid.SHORT);
+        this.props.event();
       });
   }
 
@@ -115,13 +130,8 @@ class Modalx extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        console.log(response.fileName);
-        console.log(response.fileSize);
-        console.log(response.type);
-        console.log(response.uri);
-        console.log(response.path);
         this.setState({
-          image: response.uri,
+          image: response,
         });
       }
     });
@@ -160,6 +170,7 @@ class Modalx extends React.Component {
             containerStyle={styles.inputCon}
             inputContainerStyle={styles.input}
             inputStyle={styles.inputText}
+            onChange={e => this.setState({name: e.nativeEvent.text})}
           />
           <Input
             label="Description"
@@ -167,6 +178,7 @@ class Modalx extends React.Component {
             containerStyle={styles.inputCon}
             inputContainerStyle={styles.input}
             inputStyle={styles.inputText}
+            onChange={e => this.setState({description: e.nativeEvent.text})}
           />
           <Input
             label="Price"
@@ -177,6 +189,7 @@ class Modalx extends React.Component {
             containerStyle={styles.inputCon}
             inputContainerStyle={styles.input}
             inputStyle={styles.inputText}
+            onChange={e => this.setState({price: e.nativeEvent.text})}
           />
           <Input
             label="Stock"
@@ -187,11 +200,15 @@ class Modalx extends React.Component {
             containerStyle={styles.inputCon}
             inputContainerStyle={styles.input}
             inputStyle={styles.inputText}
+            onChange={e => this.setState({stock: e.nativeEvent.text})}
           />
           <TouchableOpacity onPress={this.picker}>
             <Text>Image</Text>
           </TouchableOpacity>
-          <Image source={{uri: this.state.image.uri}} />
+          <Image
+            source={{uri: this.state.image ? this.state.image.uri : null}}
+            style={{width: 100, height: 100}}
+          />
           <Picker
             selectedValue={this.state.category}
             style={styles.picker}

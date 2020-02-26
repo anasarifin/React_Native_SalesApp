@@ -9,39 +9,87 @@ class CustomDrawer extends React.Component {
   constructor() {
     super();
     this.state = {
-      category: 'all',
+      name: '',
+      category: '',
+      sort: 'name',
     };
   }
 
-  search(value) {
+  filterName(value) {
+    const name = '&name=' + value;
     this.setState({
-      name: value,
+      name: name,
     });
-    this.props.dispatch(products(url + '&name=' + value));
+    this.props.dispatch(
+      products(
+        url +
+          name +
+          '&type=' +
+          this.state.category +
+          '&sort=' +
+          this.state.sort,
+      ),
+    );
   }
+  filterType(value) {
+    const category = value;
+    this.setState({category: category});
+    this.props.dispatch(
+      products(
+        url +
+          this.state.name +
+          '&type=' +
+          category +
+          '&sort=' +
+          this.state.sort,
+      ),
+    );
+  }
+  filterSort(value) {
+    const sort = value;
+    this.setState({sort: sort});
+    this.props.dispatch(
+      products(
+        url +
+          this.state.name +
+          '&type=' +
+          this.state.category +
+          '&sort=' +
+          sort,
+      ),
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput
           placeholder="Search product here..."
-          onChange={e => this.search(e.nativeEvent.text)}
+          onChange={e => this.filterName(e.nativeEvent.text)}
         />
         <Picker
           selectedValue={this.state.category}
-          onValueChange={value => {
-            this.setState({category: value});
-            this.props.dispatch(products(url + '&type=' + value));
-          }}>
-          <Picker.Item label={'All'} value={'All'} />
-          {this.props.products.categoryList.map(item => {
+          onValueChange={value => this.filterType(value)}>
+          <Picker.Item label={'All'} value={''} />
+          {this.props.products.categoryList.map((item, index) => {
             return (
-              <Picker.Item label={item.name} value={parseFloat(item.id)} />
+              <Picker.Item key={index} label={item.name} value={item.id} />
             );
           })}
-          {/* <Picker.Item label="Java" value="0" />
-            <Picker.Item label="JavaScript" value="1" />
-            <Picker.Item label="JavaScript" value="2" />
-            <Picker.Item label="JavaScript" value="3" /> */}
+        </Picker>
+        <Picker
+          selectedValue={this.state.sort}
+          onValueChange={value => this.filterSort(value)}>
+          <Picker.Item label={'Name A-Z'} value={'name'} />
+          <Picker.Item label={'Name Z-A'} value={'name&dir=1'} />
+          <Picker.Item label={'Stock +'} value={'stock&dir=1'} />
+          <Picker.Item label={'Stock -'} value={'stock'} />
+          <Picker.Item label={'Price +'} value={'price&dir=1'} />
+          <Picker.Item label={'Price -'} value={'price'} />
+          <Picker.Item label={'Updated Newer'} value={'updated_at&dir=1'} />
+          <Picker.Item label={'Updated Older'} value={'update_at'} />
+          <Picker.Item label={'Created Newer'} value={'created_at&dir=1'} />
+          <Picker.Item label={'Created Older'} value={'created_at'} />
         </Picker>
       </View>
     );
