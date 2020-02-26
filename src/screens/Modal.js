@@ -25,6 +25,7 @@ class Modalx extends React.Component {
     this.state = {
       show: false,
       category: 0,
+      image: {uri: null},
     };
     this.hideModal = this.hideModal.bind(this);
     this.picker = this.picker.bind(this);
@@ -59,7 +60,11 @@ class Modalx extends React.Component {
     formData.append('description', this.state.description);
     formData.append('price', this.state.price);
     formData.append('stock', this.state.stock);
-    formData.append('image', this.state.image);
+    formData.append('image', {
+      uri: this.state.image.uri,
+      type: this.state.image.type,
+      name: this.state.image.fileName,
+    });
     formData.append('category_id', this.state.category);
     console.log('ok');
     Axios.post(url, formData, {
@@ -92,12 +97,13 @@ class Modalx extends React.Component {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         const source = {uri: response.uri};
-        // console.log(response.path);
+        console.log(response.fileName);
+        console.log(response.fileSize);
+        console.log(response.type);
+        console.log(response.path);
 
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
-          image: source,
+          image: response,
         });
       }
     });
@@ -160,17 +166,17 @@ class Modalx extends React.Component {
                 <Picker.Item label={item.name} value={parseFloat(item.id)} />
               );
             })}
-            {/* <Picker.Item label="Java" value="0" />
-            <Picker.Item label="JavaScript" value="1" />
-            <Picker.Item label="JavaScript" value="2" />
-            <Picker.Item label="JavaScript" value="3" /> */}
           </Picker>
-          <Image source={this.state.imageSource} />
+          <Image
+            style={{width: 100, height: 100}}
+            source={{uri: this.state.image.uri}}
+          />
         </View>
         <Button
           title="Add"
           buttonStyle={styles.button}
           containerStyle={styles.buttonCon}
+          // onPress={this.postData}
           onPress={this.postData}
         />
       </SafeAreaView>

@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
   listTextCon: {
     flex: 2,
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: 20,
+    alignItems: 'flex-start',
+    paddingLeft: 20,
   },
   listName: {
     fontSize: 20,
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 7,
   },
   icon: {
     color: 'rgba(255,255,255,.75)',

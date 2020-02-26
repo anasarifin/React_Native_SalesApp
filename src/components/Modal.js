@@ -121,7 +121,7 @@ class Modalx extends React.Component {
         console.log(response.uri);
         console.log(response.path);
         this.setState({
-          image: response,
+          image: response.uri,
         });
       }
     });

@@ -95,6 +95,14 @@ export default class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Text onPress={this.logout}>This is history page</Text>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          <View style={{width: 200}}>
+            <Text>1</Text>
+          </View>
+          <View style={{width: 150, backgroundColor: 'black'}}>
+            <Text>2</Text>
+          </View>
+        </View>
       </View>
     );
   }
