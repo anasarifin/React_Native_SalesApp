@@ -63,6 +63,18 @@ class CustomDrawer extends React.Component {
     );
   }
 
+  resetFilter() {
+    this.setState({
+      name: '',
+      category: '',
+      sort: 'name',
+    });
+  }
+
+  componentDidMount() {
+    this.resetFilter();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -96,9 +108,9 @@ class CustomDrawer extends React.Component {
           <Picker.Item label={'Created Newer'} value={'created_at&dir=1'} />
           <Picker.Item label={'Created Older'} value={'created_at'} />
         </Picker>
-        <TouchableOpacity style={styles.logout} onPress={this.props.event}>
+        {/* <TouchableOpacity style={styles.logout} onPress={this.props.event}>
           <Button title="   Logout   " color="red" style={styles.button} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }

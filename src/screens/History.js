@@ -40,7 +40,6 @@ export default class Home extends React.Component {
       fetchComplete: false,
     };
     this.toRupiah = this.toRupiah.bind(this);
-    this.logout = this.logout.bind(this);
   }
   getData() {
     // fetch(url)
@@ -75,10 +74,10 @@ export default class Home extends React.Component {
     return rupiah;
   }
 
-  logout() {
-    AsyncStorage.removeItem('token');
-    this.props.navigation.navigate('login');
-  }
+  // logout() {
+  //   AsyncStorage.removeItem('token');
+  //   this.props.navigation.navigate('login');
+  // }
 
   render() {
     return (

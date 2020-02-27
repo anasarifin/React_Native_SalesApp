@@ -26,7 +26,7 @@ class Modalx extends React.Component {
     this.state = {
       show: false,
       category: 0,
-      image: {uri: null},
+      image: {uri: null, type: null, fileName: null},
     };
     this.hideModal = this.hideModal.bind(this);
     this.picker = this.picker.bind(this);
@@ -67,7 +67,14 @@ class Modalx extends React.Component {
       name: this.state.image.fileName,
     });
     formData.append('category_id', this.state.category);
-    console.log('ok');
+    if (
+      !this.state.name ||
+      !this.state.description ||
+      !this.state.price ||
+      !this.state.stock
+    ) {
+      ToastAndroid.show('Adding failed!', ToastAndroid.SHORT);
+    }
     Axios.post(url, formData, {
       headers: {
         usertoken: AsyncStorage.getItem('token'),
@@ -77,10 +84,19 @@ class Modalx extends React.Component {
         this.props.dispatch(
           products('http://100.24.32.116:9999/api/v1/products?page=1'),
         );
-        ToastAndroid.show('Register success!', ToastAndroid.SHORT);
+        ToastAndroid.show('Adding success!', ToastAndroid.SHORT);
         this.props.navigation.navigate('Home');
+        this.setState({
+          name: '',
+          description: '',
+          price: '',
+          stock: '',
+          category: 0,
+          image: {uri: null, type: null, fileName: null},
+        });
       })
       .catch(reject => {
+        ToastAndroid.show('Adding failed!', ToastAndroid.SHORT);
         console.log(reject);
       });
   }
@@ -124,6 +140,7 @@ class Modalx extends React.Component {
         </TouchableOpacity> */}
         <View style={styles.container}>
           <Input
+            value={this.state.name}
             label="Name"
             containerStyle={styles.inputCon}
             inputContainerStyle={styles.input}
@@ -131,6 +148,7 @@ class Modalx extends React.Component {
             onChange={e => this.setState({name: e.nativeEvent.text})}
           />
           <Input
+            value={this.state.description}
             label="Description"
             containerStyle={styles.inputCon}
             inputContainerStyle={styles.input}
@@ -138,6 +156,7 @@ class Modalx extends React.Component {
             onChange={e => this.setState({description: e.nativeEvent.text})}
           />
           <Input
+            value={this.state.price}
             label="Price"
             keyboardType={'numeric'}
             containerStyle={styles.inputCon}
@@ -146,6 +165,7 @@ class Modalx extends React.Component {
             onChange={e => this.setState({price: e.nativeEvent.text})}
           />
           <Input
+            value={this.state.stock}
             label="Stock"
             keyboardType={'numeric'}
             containerStyle={styles.inputCon}
@@ -153,23 +173,26 @@ class Modalx extends React.Component {
             inputStyle={styles.inputText}
             onChange={e => this.setState({stock: e.nativeEvent.text})}
           />
-          <TouchableOpacity onPress={this.picker}>
-            <Text>Image</Text>
-          </TouchableOpacity>
           <Picker
             selectedValue={this.state.category}
             style={styles.picker}
             onValueChange={value => this.setState({category: value})}>
-            {this.props.products.categoryList.map(item => {
+            {this.props.products.categoryList.map((item, index) => {
               return (
-                <Picker.Item label={item.name} value={parseFloat(item.id)} />
+                <Picker.Item
+                  key={index}
+                  label={item.name}
+                  value={parseFloat(item.id)}
+                />
               );
             })}
           </Picker>
-          <Image
-            style={{width: 100, height: 100}}
-            source={{uri: this.state.image.uri}}
+          <Button
+            onPress={this.picker}
+            title="Select Image"
+            buttonStyle={styles.buttonImage}
           />
+          <Image style={styles.preview} source={{uri: this.state.image.uri}} />
         </View>
         <Button
           title="Add"
@@ -192,6 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'whitesmoke',
+    marginTop: 20,
   },
   inputCon: {
     alignItems: 'center',
@@ -227,9 +251,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+  buttonImage: {
+    height: 30,
+    borderRadius: 0,
+  },
   picker: {
     width: '60%',
     height: 50,
+    marginTop: -20,
+    marginBottom: 20,
+  },
+  preview: {
+    width: 100,
+    height: 100,
+    marginTop: 2,
   },
 });
 

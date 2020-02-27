@@ -18,7 +18,7 @@ import {connect} from 'react-redux';
 import {reset} from '../redux/actions/cart';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import CartList from './CartList';
+import CartList from '../components/CartList';
 
 const url = 'http://100.24.32.116:9999/api/v1/products?page=';
 const urlCheckout = 'http://localhost:9999/api/v1/cart';

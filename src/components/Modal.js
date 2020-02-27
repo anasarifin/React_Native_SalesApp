@@ -71,6 +71,14 @@ class Modalx extends React.Component {
       name: this.state.image.fileName,
     });
     formData.append('category_id', this.state.category || 0);
+    // if (
+    //   !this.state.name ||
+    //   !this.state.description ||
+    //   !this.state.price ||
+    //   !this.state.stock
+    // ) {
+    //   ToastAndroid.show('Adding failed!', ToastAndroid.SHORT);
+    // }
     Axios.patch(url + '/' + this.props.data.id, formData, {
       headers: {
         usertoken: AsyncStorage.getItem('token'),
@@ -202,13 +210,6 @@ class Modalx extends React.Component {
             inputStyle={styles.inputText}
             onChange={e => this.setState({stock: e.nativeEvent.text})}
           />
-          <TouchableOpacity onPress={this.picker}>
-            <Text>Image</Text>
-          </TouchableOpacity>
-          <Image
-            source={{uri: this.state.image ? this.state.image.uri : null}}
-            style={{width: 100, height: 100}}
-          />
           <Picker
             selectedValue={this.state.category}
             style={styles.picker}
@@ -219,6 +220,21 @@ class Modalx extends React.Component {
               );
             })}
           </Picker>
+          <Button
+            onPress={this.picker}
+            title="Select Image"
+            buttonStyle={styles.buttonImage}
+          />
+          <Image
+            source={{
+              uri: this.state.image.uri
+                ? this.state.image.uri
+                : this.props.data.image
+                ? this.props.data.image.replace('localhost', '100.24.32.116')
+                : null,
+            }}
+            style={styles.preview}
+          />
         </View>
         <Button
           title="Change"
@@ -267,11 +283,6 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 20,
   },
-  picker: {
-    width: '60%',
-    textAlign: 'center',
-    height: 50,
-  },
   button: {
     width: '85%',
   },
@@ -282,6 +293,21 @@ const styles = StyleSheet.create({
   buttonCon: {
     alignItems: 'center',
     marginBottom: 15,
+  },
+  buttonImage: {
+    height: 30,
+    borderRadius: 0,
+  },
+  picker: {
+    width: '60%',
+    height: 50,
+    marginTop: -15,
+    marginBottom: 15,
+  },
+  preview: {
+    width: 100,
+    height: 100,
+    marginTop: 2,
   },
 });
 

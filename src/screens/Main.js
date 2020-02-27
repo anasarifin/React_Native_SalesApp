@@ -7,6 +7,7 @@ import Drawer from './Drawer';
 import History from './History';
 import Modal from './Modal';
 import Cart from './Cart';
+import Logout from './Logout';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -91,6 +92,17 @@ class Main extends React.Component {
             tabBarIcon: () => (
               <View>
                 <AntDesign style={styles.icon} size={25} name={'areachart'} />
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Logout"
+          component={Logout}
+          options={{
+            tabBarIcon: () => (
+              <View>
+                <Ionicons style={styles.icon} size={25} name={'md-power'} />
               </View>
             ),
           }}

@@ -42,18 +42,18 @@ class Home extends React.Component {
     this.changePage = this.changePage.bind(this);
   }
 
-  getData() {
-    Axios.get(url + this.state.currentPage)
-      .then(resolve => {
-        this.setState({
-          data: resolve.data,
-          fetchComplete: true,
-        });
-      })
-      .catch(err => {
-        console.warn(err);
-      });
-  }
+  // getData() {
+  //   Axios.get(url + this.state.currentPage)
+  //     .then(resolve => {
+  //       this.setState({
+  //         data: resolve.data,
+  //         fetchComplete: true,
+  //       });
+  //     })
+  //     .catch(err => {
+  //       console.warn(err);
+  //     });
+  // }
 
   addToCart(item) {
     this.props.dispatch(add(item));
@@ -145,10 +145,12 @@ class Home extends React.Component {
                   keyExtractor={(item, index) => index.toString()}
                 />
               ) : (
-                <Image
-                  source={require('../images/empty.png')}
-                  style={styles.empty}
-                />
+                <View style={styles.emptyCon}>
+                  <Image
+                    source={require('../images/not-found.png')}
+                    style={styles.empty}
+                  />
+                </View>
               )}
             </ScrollView>
             {/* <Pagination page={this.changePage} style={styles.page} /> */}
@@ -221,6 +223,15 @@ const styles = StyleSheet.create({
   },
   dummy: {
     position: 'absolute',
+  },
+  empty: {
+    width: '100%',
+    maxWidth: 500,
+    marginTop: 100,
+    resizeMode: 'contain',
+  },
+  emptyCon: {
+    alignItems: 'center',
   },
 });
 
